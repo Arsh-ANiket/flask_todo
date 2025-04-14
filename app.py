@@ -29,8 +29,25 @@ def add():
          # name of the func has to be passed in the url
          return redirect(url_for('index'))
 
-def delete():
-    pass
+@app.route("/update/<int:todo_id>")
+def update(todo_id):
+    with app.app_context():
+        todo=Todo.query.filter_by(id=todo_id).first()
+        todo.completed=not todo.completed
+        db.session.commit()
+         # name of the func has to be passed in the url
+        return redirect(url_for('index'))
+
+@app.route("/delete/<int:todo_id>")
+def delete(todo_id):
+    with app.app_context():
+        todo=Todo.query.filter_by(id=todo_id).first()
+        db.session.delete(todo)
+         # delete the todo item
+        db.session.commit()
+         # name of the func has to be passed in the url
+        return redirect(url_for('index'))
+
 
 def create_db():
     with app.app_context():  # Push application context
