@@ -4,35 +4,223 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TODO APP</title>
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #ecf0f1;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            background: linear-gradient(120deg, #ff9a8b, #ff6a88, #d68bff);
+            animation: gradient-animation 5s ease infinite;
+        }
+
+        /* Animation for gradient background */
+        @keyframes gradient-animation {
+            0% {
+                background: linear-gradient(120deg, #ff9a8b, #ff6a88, #d68bff);
+            }
+            50% {
+                background: linear-gradient(120deg, #ff6a88, #ff9a8b, #d68bff);
+            }
+            100% {
+                background: linear-gradient(120deg, #d68bff, #ff9a8b, #ff6a88);
+            }
+        }
+
+        /* Title Styling */
+        h1 {
+            color: #fff;
+            text-align: center;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff6a88, #d68bff);
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: 2px;
+        }
+
+        /* Main Container */
+        .todo-container {
+            width: 100%;
+            max-width: 650px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            animation: bounce 1s ease-out;
+        }
+
+        /* Animation for Todo Container */
+        @keyframes bounce {
+            0% {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .todo-container form {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 30px;
+        }
+
+        /* Input and Button Styling */
+        .todo-container input[type="text"] {
+            padding: 15px;
+            font-size: 18px;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            outline: none;
+            font-family: 'Poppins', sans-serif;
+            transition: 0.4s;
+            width: 100%;
+        }
+
+        .todo-container input[type="text"]:focus {
+            border-color: #e74c3c;
+            transform: scale(1.05);
+        }
+
+        .todo-container button {
+            padding: 15px;
+            font-size: 20px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .todo-container button:hover {
+            background-color: #c0392b;
+            transform: translateY(-3px);
+        }
+
+        /* Styling for Each Todo Item */
+        .todo-item {
+            background-color: #f9f9f9;
+            margin: 12px 0;
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: 0.3s ease-in-out;
+        }
+
+        .todo-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Text Styling for Todo Item */
+        .todo-item p {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        /* Status label styling */
+        .status {
+            padding: 7px 15px;
+            font-size: 14px;
+            border-radius: 12px;
+            text-transform: capitalize;
+            font-weight: 500;
+        }
+
+        .completed {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .not-completed {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        /* Links for Update and Delete */
+        .todo-item a {
+            color: #3498db;
+            text-decoration: none;
+            font-size: 16px;
+            margin-left: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .todo-item a:hover {
+            color: #e74c3c;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 600px) {
+            .todo-container {
+                padding: 20px;
+            }
+
+            .todo-container input[type="text"] {
+                padding: 12px;
+                font-size: 16px;
+            }
+
+            .todo-container button {
+                padding: 12px;
+                font-size: 16px;
+            }
+
+            .todo-item {
+                padding: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
+
     <h1>TODO APP</h1>
-    <form action="/add" method="POST">
-        <div>
-            <label for="title">Todo Title</label>
-            <input type="text" name="title" placeholder="Enter Todo...">
-            <br> 
-            <button type="submit">ADD</button>
-        </div>
 
-    </form>
+    <div class="todo-container">
+        <!-- Form to Add a New Todo -->
+        <form action="/add" method="POST">
+            <input type="text" name="title" placeholder="What needs to be done?" required>
+            <button type="submit">Add Todo</button>
+        </form>
 
-    <!-- rendrer the todo list data here -->
-    {% for todo in todo_list %}
-    <p>{{todo.id}} | {{todo.title}}</p>
-    {% if todo.completed==False %}
-        <span>Not Completed</span>
-    {% else %}
-        <span>Completed </span>
-    {% endif %}
-    <a href="/update/{{todo.id}}">Update</a>
-    <a href="/delete/{{todo.id}}">Delete</a>
-    
-    {% endfor %}
+        <!-- Render the todo list data here -->
+        {% for todo in todo_list %}
+            <div class="todo-item">
+                <div>
+                    <p>{{todo.id}} | {{todo.title}}</p>
+                    <span class="status {% if todo.completed %}completed{% else %}not-completed{% endif %}">
+                        {% if todo.completed %}
+                            Completed
+                        {% else %}
+                            In Progress
+                        {% endif %}
+                    </span>
+                </div>
 
-
-
-
+                <div>
+                    <a href="/update/{{todo.id}}">Update</a>
+                    <a href="/delete/{{todo.id}}">Delete</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 
 </body>
 </html>
