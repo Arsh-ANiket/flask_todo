@@ -1,0 +1,32 @@
+To run a Flask app, follow these steps:
+
+2. **Create a Flask App**:
+    Create a Python file (e.g., `app.py`) with the following content:
+    ```python
+    from flask import Flask
+
+    app = Flask(__name__)
+
+    @app.route('/')
+    def home():
+         return "Hello, Flask!"
+
+    if __name__ == '__main__':
+         app.run(debug=True)
+    ```
+
+3. **Set Environment Variable** (Optional):
+    On Windows:
+    ```bash
+    set FLASK_APP=app.py
+    set FLASK_ENV=development
+    ```
+
+4. **Run the App**:
+    Run the Flask app using:
+    ```bash
+    flask run
+    ```
+
+5. **Access the App**:
+    Open a browser and go to `http://127.0.0.1:5000/`.
