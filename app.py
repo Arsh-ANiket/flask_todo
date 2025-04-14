@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template,request,redirect,url_for
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -19,10 +19,18 @@ def index():
         # show all todo
     return render_template('base.html',todo_list=todo_list)
 
-@app.route('/about')
-def about():
-    # show all todo
-    return "About Page"
+@app.route("/add",methods=['POST'])
+def add():
+    title=request.form.get('title')
+    with app.app_context():
+         new_todo=Todo(title=title, completed=False)
+         db.session.add(new_todo)
+         db.session.commit()
+         # name of the func has to be passed in the url
+         return redirect(url_for('index'))
+
+def delete():
+    pass
 
 def create_db():
     with app.app_context():  # Push application context
