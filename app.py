@@ -1,4 +1,4 @@
-from flask import Flask, render_template,request,redirect,url_for
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -15,50 +15,40 @@ class Todo(db.Model):
 
 @app.route('/')
 def index():
-    todo_list=Todo.query.all()
-        # show all todo
-    return render_template('base.html',todo_list=todo_list)
+    todo_list = Todo.query.all()
+    # Show all todo
+    return render_template('base.html', todo_list=todo_list)
 
-@app.route("/add",methods=['POST'])
+@app.route("/add", methods=['POST'])
 def add():
-    title=request.form.get('title')
-    with app.app_context():
-         new_todo=Todo(title=title, completed=False)
-         db.session.add(new_todo)
-         db.session.commit()
-         # name of the func has to be passed in the url
-         return redirect(url_for('index'))
+    title = request.form.get('title')
+    new_todo = Todo(title=title, completed=False)
+    db.session.add(new_todo)
+    db.session.commit()
+    # Redirect after adding new todo
+    return redirect(url_for('index'))
 
 @app.route("/update/<int:todo_id>")
 def update(todo_id):
-    with app.app_context():
-        todo=Todo.query.filter_by(id=todo_id).first()
-        todo.completed=not todo.completed
+    todo = Todo.query.filter_by(id=todo_id).first()
+    if todo:
+        todo.completed = not todo.completed
         db.session.commit()
-         # name of the func has to be passed in the url
-        return redirect(url_for('index'))
+    # Redirect after updating the todo status
+    return redirect(url_for('index'))
 
 @app.route("/delete/<int:todo_id>")
 def delete(todo_id):
-    with app.app_context():
-        todo=Todo.query.filter_by(id=todo_id).first()
+    todo = Todo.query.filter_by(id=todo_id).first()
+    if todo:
         db.session.delete(todo)
-         # delete the todo item
         db.session.commit()
-         # name of the func has to be passed in the url
-        return redirect(url_for('index'))
-
+    # Redirect after deleting the todo item
+    return redirect(url_for('index'))
 
 def create_db():
-    with app.app_context():  # Push application context
-        db.create_all()
+    db.create_all()
 
 if __name__ == '__main__':
-    create_db()  # Ensure DB and tables are created
-    # creating a dummy data
-    # with app.app_context():
-    #     new_todo=Todo(title='Learn Flask', completed=False)
-    #     db.session.add(new_todo)
-    #     db.session.commit()  # Commit the new todo item to the database
-    
+    # create_db()  # Ensure DB and tables are created
     app.run(debug=True)
