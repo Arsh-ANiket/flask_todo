@@ -1,18 +1,39 @@
 from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
 
-app=Flask(__name__)
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///D:/Python/flask/project/todo/todo.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-#this decorator is provided to give the index page link
+db = SQLAlchemy(app)
+
+# Example database model for Todo items
+class Todo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    completed = db.Column(db.Boolean, default=False)
+
 @app.route('/')
 def index():
-    return render_template('base.html')
+    todo_list=Todo.query.all()
+        # show all todo
+    return render_template('base.html',todo_list=todo_list)
 
 @app.route('/about')
 def about():
+    # show all todo
     return "About Page"
-#this is the about page link
 
-if __name__=='__main__':
+def create_db():
+    with app.app_context():  # Push application context
+        db.create_all()
+
+if __name__ == '__main__':
+    create_db()  # Ensure DB and tables are created
+    # creating a dummy data
+    # with app.app_context():
+    #     new_todo=Todo(title='Learn Flask', completed=False)
+    #     db.session.add(new_todo)
+    #     db.session.commit()  # Commit the new todo item to the database
+    
     app.run(debug=True)
-#this is the main entry point of the application
-
